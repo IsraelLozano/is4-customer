@@ -96,6 +96,8 @@ namespace SolIS4.STS.Controllers
                     //    return Redirect(model.ReturnUrl);
                     //}
 
+
+
                     // request for a local page
                     if (Url.IsLocalUrl(model.ReturnUrl))
                     {
