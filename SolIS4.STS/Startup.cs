@@ -39,7 +39,6 @@ namespace SolIS4.STS
         {
             services.AddTransient<IUserValidator, UserValidator>();
             services.AddTransient<IUserRepository, UserRepository>();
-            //services.AddTransient<IRepository, CorsPolicyService>();
 
             services.AddSingleton<Func<IDbConnection>>(() => new SqlConnection(Configuration.GetConnectionString("sqlConnectionNet")));
 
@@ -48,28 +47,10 @@ namespace SolIS4.STS
 
 
             services.AddIdentityServer()
-                .AddDeveloperSigningCredential() //not something we want to use in a production environment;
-                                                 //.AddCustomUserStore()
-                                                 //.AddClientStore<CustomClientStore>()
-                                                 //.AddResourceStore<CustomResourceStore>()
-
+                .AddDeveloperSigningCredential()
                   .AddClientStore<ClientStore>()
-                  //.AddCorsPolicyService<CorsPolicyService>()
                   .AddResourceStore<ResourceStore>()
                   .AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>();
-
-            //services.AddDbContext<ApplicationDbContext>(options =>options.UseSqlServer(Configuration.GetConnectionString("sqlConnection")));
-
-            //.AddConfigurationStore(opt =>
-            // {
-            //     opt.ConfigureDbContext = c => c.UseSqlServer(Configuration.GetConnectionString("sqlConnection"),
-            //         sql => sql.MigrationsAssembly(migrationAssembly));
-            // })
-            //.AddOperationalStore(opt =>
-            //{
-            //    opt.ConfigureDbContext = o => o.UseSqlServer(Configuration.GetConnectionString("sqlConnection"),
-            //        sql => sql.MigrationsAssembly(migrationAssembly));
-            //});
 
             services.AddControllersWithViews();
 
@@ -102,6 +83,12 @@ namespace SolIS4.STS
                 //app.UseSwagger();
                 //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SolIS4.STS v1"));
             }
+
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = Microsoft.AspNetCore.Http.SameSiteMode.Lax
+            });
+
             app.UseStaticFiles();
             app.UseRouting();
 
